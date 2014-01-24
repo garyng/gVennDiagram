@@ -26,13 +26,23 @@ namespace gVennDiagram
 		#endregion
 
 		#region Operators
-		private string[] _strOperators = { "n", "u", "'" , "(" , ")"};
+		private string[] _strOperators = { "n", "u", "'", "(", ")" };
 		private string[] _strLongOperators = { "intersect", "union" };
 		private int _iCircleLimit = 3;
 		#endregion
 
 		#region Private Field
 		private string _strEquation;
+		private int _iCircleCount;
+		#endregion
+
+		#region Execption
+		static class gVennDiagramException
+		{
+			public static Exception OutOfCircleLimit = new Exception("The number of circle used is more than limit.");
+
+			public static Exception NoCircleIsUsed = new Exception("No circle is used.");
+		}
 		#endregion
 
 		public VennDiagramHelper(string Equation)
@@ -43,7 +53,8 @@ namespace gVennDiagram
 		public void Operate()
 		{
 			FormatEquation(ref _strEquation);
-			CalculateCircleCount(_strEquation);
+			_iCircleCount = CalculateCircleCount(_strEquation);
+			CheckCircleCount(_iCircleCount);
 		}
 
 		#region FormatEquation
@@ -76,6 +87,23 @@ namespace gVennDiagram
 			return equ.Distinct().ToList().Count;
 		}
 
-		
+		#region CheckCircleCount
+		private void CheckCircleCount(string equation)
+		{
+			CheckCircleCount(CalculateCircleCount(equation));
+		}
+
+		private void CheckCircleCount(int count)
+		{
+			if (count > _iCircleLimit)
+			{
+				throw gVennDiagramException.OutOfCircleLimit;
+			}
+			else if (count <= 0)
+			{
+				throw gVennDiagramException.NoCircleIsUsed;
+			}
+		}
+		#endregion
 	}
 }

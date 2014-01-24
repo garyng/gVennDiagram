@@ -28,7 +28,7 @@ namespace gVennDiagram
 
 		private void btnOperate_Click(object sender, RoutedEventArgs e)
 		{
-			VennDiagramHelper vdg = new VennDiagramHelper("A n B' intersect A union C");
+			VennDiagramHelper vdg = new VennDiagramHelper("A union B intersect C'");
 			vdg.Operate();
 		}
 	}
