@@ -23,7 +23,6 @@ namespace gVennDiagram
 		public MainWindow()
 		{
 			InitializeComponent();
-			
 		}
 
 		private void btnOperate_Click(object sender, RoutedEventArgs e)

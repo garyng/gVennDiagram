@@ -2,27 +2,29 @@
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		Title="MainWindow" Height="350" Width="525">
+	<Window.Resources>
+		<GeometryGroup x:Key="g">
+			<RectangleGeometry Rect="0,0 100,100"></RectangleGeometry>
+			<EllipseGeometry Center="50,50" RadiusX="25" RadiusY="25"></EllipseGeometry>
+
+			<RectangleGeometry Rect="100,0 100,100"></RectangleGeometry>
+			<EllipseGeometry Center="133,50" RadiusX="25" RadiusY="25"></EllipseGeometry>
+			<EllipseGeometry Center="166,50" RadiusX="25" RadiusY="25"></EllipseGeometry>
+
+			<RectangleGeometry Rect="200,0 100,100"></RectangleGeometry>
+			<EllipseGeometry Center="248,33" RadiusX="25" RadiusY="25"></EllipseGeometry>
+			<EllipseGeometry Center="233,66" RadiusX="25" RadiusY="25"></EllipseGeometry>
+			<EllipseGeometry Center="266,66" RadiusX="25" RadiusY="25"></EllipseGeometry>
+
+		</GeometryGroup>
+	</Window.Resources>
 	<Grid>
 		<StackPanel>
-			<Viewbox>
-				<Path Fill="Yellow">
-					<Path.Data>
-						<GeometryGroup>
-							<RectangleGeometry Rect="0,0 100,100"></RectangleGeometry>
-							<EllipseGeometry Center="50,50" RadiusX="25" RadiusY="25"></EllipseGeometry>
-
-							<RectangleGeometry Rect="100,0 100,100"></RectangleGeometry>
-							<EllipseGeometry Center="133,50" RadiusX="25" RadiusY="25"></EllipseGeometry>
-							<EllipseGeometry Center="166,50" RadiusX="25" RadiusY="25"></EllipseGeometry>
-
-							<RectangleGeometry Rect="200,0 100,100"></RectangleGeometry>
-							<EllipseGeometry Center="248,33" RadiusX="25" RadiusY="25"></EllipseGeometry>
-							<EllipseGeometry Center="233,66" RadiusX="25" RadiusY="25"></EllipseGeometry>
-							<EllipseGeometry Center="266,66" RadiusX="25" RadiusY="25"></EllipseGeometry>
-
-						</GeometryGroup>
-					</Path.Data>
-				</Path>
+			<Viewbox Name="v">
+				<StackPanel>
+					<Path Name="p" Fill="Yellow" Data="{DynamicResource ResourceKey=g}">
+					</Path>
+				</StackPanel>
 			</Viewbox>
 			<Button Name="btnOperate" Click="btnOperate_Click">Operate</Button>
 		</StackPanel>
