@@ -1,0 +1,14 @@
+C:\Users\GaryNg\AppData\Local\Temporary Projects\gVennDiagram\bin\Debug\gVennDiagram.exe.config
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\bin\Debug\gVennDiagram.exe.config
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\bin\Debug\gVennDiagram.exe
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\bin\Debug\gVennDiagram.pdb
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\gVennDiagram.csprojResolveAssemblyReference.cache
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\MainWindow.baml
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\MainWindow.g.cs
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\App.g.cs
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\gVennDiagram_MarkupCompile.cache
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\gVennDiagram.g.resources
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\gVennDiagram.Properties.Resources.resources
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\gVennDiagram.csproj.GenerateResource.Cache
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\gVennDiagram.exe
+I:\C Sharp\Projects\gVennDiagram\gVennDiagram\obj\Debug\gVennDiagram.pdb
