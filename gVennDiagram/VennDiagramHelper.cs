@@ -19,13 +19,14 @@ namespace gVennDiagram
 	class VennDiagramHelper
 	{
 		#region Diagram
-		private static int _iRadius = 25;
+		private int _iRadius = 25;
+		private RectangleGeometry _rgRect = new RectangleGeometry(new Rect(0, 0, 100, 100));
 		private Brush _bFill = Brushes.SkyBlue;
 
 		private List<List<Point>> _plCirclesPoint = new List<List<Point>>() { 
 			{new List<Point>() { new Point(50, 50) }}, //one
 			{new List<Point>() { new Point(33, 50), new Point(66, 50) }}, //two
-			{new List<Point>() { new Point(48, 33), new Point(33, 60), new Point(66, 66) }} //three
+			{new List<Point>() { new Point(48, 33), new Point(33, 66), new Point(66, 66) }} //three
 		};
 		#endregion
 
@@ -63,6 +64,7 @@ namespace gVennDiagram
 		//) > > X > >
 		//# < < < X =
 		private List<Operators> _oprtOperatorsPriorityIndexer = new List<Operators>() { Operators.Intersect, Operators.Union, Operators.LeftBracket, Operators.RightBracket, Operators.Delim };
+		// [stack, current]
 		private OperatorsPriority[,] _oprtOperatorsPriority = {
 													{OperatorsPriority.Bigger,OperatorsPriority.Bigger,OperatorsPriority.Smaller,OperatorsPriority.Bigger,OperatorsPriority.Bigger},
 													{OperatorsPriority.Bigger,OperatorsPriority.Bigger,OperatorsPriority.Smaller,OperatorsPriority.Bigger,OperatorsPriority.Bigger},
@@ -80,7 +82,7 @@ namespace gVennDiagram
 		private string _strEquation;
 		private int _iCircleCount;	//operands
 		private List<char> _clOperands;
-		public Dictionary<char, Geometry> _dictOperandVisual = new Dictionary<char, Geometry>();
+		private Dictionary<char, Geometry> _dictOperandVisual = new Dictionary<char, Geometry>();
 		#endregion
 
 		#region Execption
@@ -99,75 +101,122 @@ namespace gVennDiagram
 			_strEquation = Equation;
 		}
 
-		#region Operate
+		#region EquationSolving
 
-		public void Operate()
+		public Geometry Solve()
 		{
 			FormatEquation(ref _strEquation);
 			_iCircleCount = CalculateCircleCount(_strEquation);
 			CheckCircleCount(_iCircleCount);
 			InitializeOperandVisuals();
+			
+			Geometry result =  ProcessEquation(_strEquation);
+			return result;
 		}
 
-		private void ProcessEquation(string equation)
+		private Geometry ProcessEquation(string equation)
 		{
-			Stack<char> oprn = new Stack<char>();
+			string equ = equation;
+			equ = EndWithDelim(equ);
+
+			Stack<Geometry> oprn = new Stack<Geometry>();
 			Stack<Operators> oprt = new Stack<Operators>();
 			oprt.Push(Operators.Delim);
 
 			int pointer = 0;
 
-			while (pointer < equation.Count())
+			while (pointer < equ.Count())
 			{
 				Operators curOprt;
-				if (_dictNormalOperators.TryGetValue(equation[pointer], out curOprt))
+				if (_dictNormalOperators.TryGetValue(equ[pointer], out curOprt))
 				{
+					int curIndex = _oprtOperatorsPriorityIndexer.IndexOf(curOprt);
+					int stackIndex = _oprtOperatorsPriorityIndexer.IndexOf(oprt.Peek());
+					OperatorsPriority op = _oprtOperatorsPriority[stackIndex, curIndex];
+					switch (op)
+					{
+						case OperatorsPriority.Bigger:
 
+							if (oprn.Count < 2)
+							{
+								throw gVennDiagramException.InvalidEquation;
+							}
+
+							Console.WriteLine(curOprt);
+
+							Geometry operand2 = oprn.Pop();
+							Geometry operand1 = oprn.Pop();
+
+							Geometry result = Operate(operand1, operand2, oprt.Pop());
+							oprn.Push(result);
+
+							break;
+						case OperatorsPriority.Smaller:
+							oprt.Push(curOprt);
+							pointer++;
+							break;
+						case OperatorsPriority.Equal:
+							oprt.Pop();
+							//reset
+							InitializeOperandVisuals();
+							pointer++;
+							break;
+						case OperatorsPriority.Invalid:
+							throw gVennDiagramException.InvalidEquation;
+					}
+
+				}
+				else if (_dictSpecialOperators.TryGetValue(equ[pointer],out curOprt))
+				{
 					if (curOprt == Operators.Not)
 					{
-
-					}
-					else
-					{
-						int curIndex = _oprtOperatorsPriorityIndexer.IndexOf(curOprt);
-						int stackIndex = _oprtOperatorsPriorityIndexer.IndexOf(oprt.Peek());
-						OperatorsPriority op = _oprtOperatorsPriority[curIndex,stackIndex];
-						switch (op)
-						{
-							case OperatorsPriority.Bigger:
-								
-
-
-								break;
-							case OperatorsPriority.Smaller:
-								oprt.Push(curOprt);
-								pointer++;
-								break;
-							case OperatorsPriority.Equal:
-								oprt.Pop();
-								break;
-							case OperatorsPriority.Invalid:
-								throw gVennDiagramException.InvalidEquation;
-						}
+						Geometry operand = oprn.Pop();
+						Geometry result = Operate(operand, Operators.Not);
+						oprn.Push(result);
+						pointer++;
 					}
 				}
 				else
 				{
-					oprn.Push(equation[pointer]);
+					oprn.Push(_dictOperandVisual[equ[pointer]]);
 					pointer++;
 				}
 			}
+			return oprn.Pop();
+		}
+
+		private Geometry Operate(Geometry operand, Operators operators)
+		{
+			CombinedGeometry cg = new CombinedGeometry(GeometryCombineMode.Exclude, _rgRect, operand);
+			return cg;
+		}
+
+		private Geometry Operate(Geometry operand1, Geometry operand2, Operators operators)
+		{
+			CombinedGeometry cg = new CombinedGeometry();
+			switch (operators)
+			{
+				case Operators.Intersect:
+					cg.GeometryCombineMode = GeometryCombineMode.Intersect;
+					break;
+				case Operators.Union:
+					cg.GeometryCombineMode = GeometryCombineMode.Union;
+					break;
+			}
+			cg.Geometry1 = operand1;
+			cg.Geometry2 = operand2;
+			return cg;
 		}
 
 		private void InitializeOperandVisuals()
 		{
+			_dictOperandVisual.Clear();
 			List<Point> selectedCircle = _plCirclesPoint[_iCircleCount - 1];
 			for (int i = 0; i < _clOperands.Count; i++)
 			{
 				_dictOperandVisual.Add(_clOperands[i], new EllipseGeometry(selectedCircle[i], _iRadius, _iRadius));
 			}
 		}
-
 		#endregion
 
 		#region PreOperate
@@ -194,9 +243,15 @@ namespace gVennDiagram
 			}
 			return equ;
 		}
+
 		private string ConvertToLowerCase(string equation)
 		{
 			return equation.ToLower();
+		}
+
+		private string EndWithDelim(string equation)
+		{
+			return equation + _dictNormalOperators.First(item=>item.Value == Operators.Delim).Key.ToString();
 		}
 		#endregion
 

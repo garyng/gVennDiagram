@@ -25,10 +25,10 @@ namespace gVennDiagram
 			InitializeComponent();
 		}
 
-		private void btnOperate_Click(object sender, RoutedEventArgs e)
+		private void btnSolve_Click(object sender, RoutedEventArgs e)
 		{
-			VennDiagramHelper vdg = new VennDiagramHelper("A union B intersect C'");
-			vdg.Operate();
+			VennDiagramHelper vdg = new VennDiagramHelper(txtEqu.Text);
+			pResult.Data = vdg.Solve();
 		}
 	}
 }
