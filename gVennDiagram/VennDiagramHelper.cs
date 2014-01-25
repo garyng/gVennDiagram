@@ -148,8 +148,6 @@ namespace gVennDiagram
 							break;
 						case OperatorsPriority.Equal:
 							oprt.Pop();
-							//reset
-							InitializeOperandVisuals();
 							pointer++;
 							break;
 						case OperatorsPriority.Invalid:
