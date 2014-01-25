@@ -22,7 +22,7 @@
 
 	</Window.Resources>
 	<Grid>
-		<StackPanel>
+		<StackPanel Name="spCon">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition></ColumnDefinition>

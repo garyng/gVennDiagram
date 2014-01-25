@@ -28,7 +28,14 @@ namespace gVennDiagram
 		private void btnSolve_Click(object sender, RoutedEventArgs e)
 		{
 			VennDiagramHelper vdg = new VennDiagramHelper(txtEqu.Text);
-			pResult.Data = vdg.Solve();
+			try
+			{
+				pResult.Data = vdg.Solve();
+			}
+			catch
+			{
+				txtEqu.Text = "";	
+			}
 		}
 	}
 }
