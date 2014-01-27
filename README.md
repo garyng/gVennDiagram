@@ -1,5 +1,4 @@
 gVennDiagram
-
 ============
 
 A simple Venn Diagram's Union, Intersect and Not implementation in C# WPF
