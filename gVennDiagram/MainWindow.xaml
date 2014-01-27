@@ -36,7 +36,7 @@
 				<TextBox 
 					Name="txtEqu" 
 					Margin="3"
-					Padding="3" Background="#00F0F0F0"></TextBox>
+					Padding="3" Background="#00F0F0F0">((A'nB')u(AnB))nC'u(BnC)u(AnC)n(AnBnC)'</TextBox>
 				<Button 
 					Margin="3"
 					Padding="3"
